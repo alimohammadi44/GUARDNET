@@ -1,0 +1,17 @@
+# Core scientific stack
+numpy<2
+scipy
+pandas
+scikit-learn
+
+# Graph & ML utilities
+networkx
+tqdm
+joblib
+
+# PyTorch ecosystem (torch already installed manually)
+torchdata
+
+# Visualization (optional)
+matplotlib
+pillow

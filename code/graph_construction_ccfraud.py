@@ -85,7 +85,16 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
     # 读取数据集
-    df = pd.read_csv(r"data.csv")
+    # df = pd.read_csv(r"data.csv")
+    import os
+    import pandas as pd
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_PATH = os.path.join(BASE_DIR, "..", "data_base", "ccfraud.csv")
+
+    df = pd.read_csv(DATA_PATH)
+
+    # df = pd.read_csv("../data_base/ccfraud.csv")
     print("Data loaded.")
     features = np.array(df[['normTime', 'V4', 'V7', 'V8', 'V10', 'V12', 'V14', 'V16', 'V17', 'V18', 'V20', 'V21', 'V23', 'V24', 'V26', 'V27']])
 
