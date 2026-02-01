@@ -18,7 +18,7 @@ def get_args():
     parser.add_argument('--lr', '-lr', type=float, default=0.001, help='Learning rate')
     parser.add_argument('--device', '-device', type=str, default='cpu', help='Device to use')
     parser.add_argument('--epochs', '-epochs', type=int, default=1000, help='Number of epochs')
-    parser.add_argument('--graph', '-graph', type=str, default='ccfraud_graph.bin', help='Graph file path')
+    parser.add_argument('--graph', '-graph', type=str, default='ccfraud_graph1.bin', help='Graph file path')
     parser.add_argument('--save_path', '-save_path', type=str, default='./models/best_model.pth', help='Path to save the best model')
     return parser.parse_args()
 

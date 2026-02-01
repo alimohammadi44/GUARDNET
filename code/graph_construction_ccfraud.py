@@ -1,3 +1,4 @@
+
 import dgl
 import pandas as pd
 import numpy as np
@@ -8,6 +9,18 @@ from scipy.sparse import csr_matrix
 import concurrent.futures
 import argparse
 from model import MLP
+
+import time
+import torch
+
+def t(msg):
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
+start = time.time()
+
+
 class Minor_node_centred_Subgraph:
     def __init__(self, graph, dataframe,k_rw,k_khop,k_ego):
         self.graph = graph
@@ -89,18 +102,22 @@ if __name__ == "__main__":
     import os
     import pandas as pd
 
+   
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_PATH = os.path.join(BASE_DIR, "..", "data_base", "ccfraud.csv")
 
     df = pd.read_csv(DATA_PATH)
-
+    t("Data loaded.")
+   
     # df = pd.read_csv("../data_base/ccfraud.csv")
-    print("Data loaded.")
+    df = df[:10000]
+    print("KNeighborsClassifier")
     features = np.array(df[['normTime', 'V4', 'V7', 'V8', 'V10', 'V12', 'V14', 'V16', 'V17', 'V18', 'V20', 'V21', 'V23', 'V24', 'V26', 'V27']])
 
     # 使用KNeighborsClassifier计算KNN相似度
     knn = NearestNeighbors(n_neighbors=10, metric='euclidean')
     knn.fit(features)
+    t("KNeighborsClassifier")
 
     # 计算KNN图的相似度矩阵
     similarity_sparse = knn.kneighbors_graph(features, mode='distance')  # 返回稀疏矩阵
@@ -108,6 +125,8 @@ if __name__ == "__main__":
     # 将稀疏矩阵转换为稀疏张量
     rows, cols = similarity_sparse.nonzero()
     values = similarity_sparse.data
+    t("similarity_sparse")
+
 
     # 构建边列表，相似度小于阈值的节点之间连接一条边
     threshold = 0.8  # 阈值
@@ -126,6 +145,7 @@ if __name__ == "__main__":
     # 构建图
     g = dgl.graph((edges[0], edges[1]), num_nodes=len(df))
 
+    print("train_mask、val_mask、test_mask")
     # 随机生成train_mask、val_mask、test_mask
     n = len(df)
     train_mask = np.zeros(n, dtype=bool)
